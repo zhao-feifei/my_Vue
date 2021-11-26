@@ -12,6 +12,7 @@
   <div class="app">
     <p>{{msg}}</p>
   </div>
+  <script src='./src/compile.js'></script>
   <script src="./src/vue.js"></script>
   <script>
     const vm = new Vue({
@@ -20,6 +21,7 @@
         msg: 'hello Vue'
       }
     });
+    console.log(vm);
   </script>
 </body>
 
