@@ -9,8 +9,9 @@
 </head>
 
 <body>
-  <div class="app">
+  <div id="app">
     <p>{{msg}}</p>
+    <p v-text="msg"></p>
   </div>
   <script src='./src/compile.js'></script>
   <script src="./src/vue.js"></script>
@@ -21,7 +22,6 @@
         msg: 'hello Vue'
       }
     });
-    console.log(vm);
   </script>
 </body>
 
