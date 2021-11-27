@@ -61,21 +61,13 @@ class Compile {
         //获取指令后半部分
         let type = attrName.slice(2)
         let expr = attr.value
-        if (type === 'text') {
-          node.textContent = this.vm.$data[expr]
-        }
-        if (type === 'html') {
-          node.innerHTML = this.vm.$data[expr]
-        }
-        if (type === 'model') {
-          node.value = this.vm.$data[expr]
-        }
-
         //如果是  v-on  指令需要单独处理
         if (this.isEventDirective(type)) {
           //给当前元素注册事件
-          let eventType = type.split(':')[1]
-          node.addEventListener(eventType, this.vm.$methods[expr].bind(this.vm))
+          CompileUtil['eventHandler'](node, this.vm, type, expr)
+        } else {
+          //如果是普通指令  则使用工具对象调用对应的方法
+          CompileUtil[type] && CompileUtil[type](node, this.vm, expr)
         }
       }
     })
@@ -106,4 +98,27 @@ class Compile {
   isEventDirective(type) {
     return type.split(':')[0] === 'on'
   }
+}
+
+//工具对象，为不同的指令提供不同的方法
+CompileUtil = {
+  text(node, vm, expr) {
+    node.textContent = vm.$data[expr]
+  },
+  html(node, vm, expr) {
+    node.innerHTML = vm.$data[expr]
+  },
+  input(node, vm, expr) {
+    node.value = vm.$data[expr]
+  },
+  //v-on事件的处理函数
+  eventHandler(node, vm, type, expr) {
+    // 给node元素注册事件
+    let eventType = type.split(':')[1]
+    //防止没传methods 报错
+    let fn = vm.$methods && vm.$methods[expr]
+    if (eventType && fn) {
+      node.addEventListener(eventType, fn.bind(vm))
+    }
+  },
 }
