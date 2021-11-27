@@ -12,6 +12,7 @@
   <div id="app">
     <p v-text="msg" title="哈哈哈"></p>
     <p v-html="tag" title="哈哈哈"></p>
+    <button v-on:click="show">点我触发事件</button>
   </div>
   <script src='./src/compile.js'></script>
   <script src="./src/vue.js"></script>
@@ -21,6 +22,12 @@
       data: {
         msg: 'hello Vue',
         tag: '<h2>哈哈哈</h2>'
+      },
+      methods: {
+        show() {
+          console.log(this.$data.msg);
+          console.log('事件被触发了');
+        }
       }
     });
   </script>

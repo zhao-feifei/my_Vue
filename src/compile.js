@@ -67,6 +67,16 @@ class Compile {
         if (type === 'html') {
           node.innerHTML = this.vm.$data[expr]
         }
+        if (type === 'model') {
+          node.value = this.vm.$data[expr]
+        }
+
+        //如果是  v-on  指令需要单独处理
+        if (this.isEventDirective(type)) {
+          //给当前元素注册事件
+          let eventType = type.split(':')[1]
+          node.addEventListener(eventType, this.vm.$methods[expr].bind(this.vm))
+        }
       }
     })
   }
@@ -91,5 +101,9 @@ class Compile {
   //是否为指令
   isDirective(attrName) {
     return attrName.startsWith('v-')
+  }
+  //是否为事件指令
+  isEventDirective(type) {
+    return type.split(':')[0] === 'on'
   }
 }
