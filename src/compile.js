@@ -74,7 +74,13 @@ class Compile {
   }
   //解析文本节点
   compileText(node) {
-    // console.log(node)
+    let txt = node.textContent
+    // console.log(txt)
+    let reg = /\{\{(.+)}\}\}/
+    if (reg.test(txt)) {
+      let expr = RegExp.$1
+      node.textContent = txt.replace(reg, this.vm.$data[expr])
+    }
   }
 
   /*---------------------------------工具方法-------------------------------*/
