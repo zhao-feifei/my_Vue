@@ -75,11 +75,12 @@ class Compile {
   //解析文本节点
   compileText(node) {
     let txt = node.textContent
-    // console.log(txt)
-    let reg = /\{\{(.+)}\}\}/
+    console.log(txt)
+    let reg = /\{\{(.+)\}\}/
     if (reg.test(txt)) {
       let expr = RegExp.$1
-      node.textContent = txt.replace(reg, this.vm.$data[expr])
+      console.log(this.vm.$data)
+      node.textContent = txt.replace(reg, CompileUtil.getVmValue(this.vm, expr))
     }
   }
 
@@ -109,13 +110,13 @@ class Compile {
 //工具对象，为不同的指令提供不同的方法
 CompileUtil = {
   text(node, vm, expr) {
-    node.textContent = vm.$data[expr]
+    node.textContent = this.getVmValue(vm, expr)
   },
   html(node, vm, expr) {
-    node.innerHTML = vm.$data[expr]
+    node.innerHTML = this.getVmValue(vm, expr)
   },
   input(node, vm, expr) {
-    node.value = vm.$data[expr]
+    node.value = this.getVmValue(vm, expr)
   },
   //v-on事件的处理函数
   eventHandler(node, vm, type, expr) {
@@ -126,5 +127,14 @@ CompileUtil = {
     if (eventType && fn) {
       node.addEventListener(eventType, fn.bind(vm))
     }
+  },
+
+  //获取vm中的数据的方法
+  getVmValue(vm, expr) {
+    let data = vm.$data
+    expr.split('.').forEach((key) => {
+      data = data[key]
+    })
+    return data
   },
 }

@@ -10,11 +10,10 @@
 
 <body>
   <div id="app">
-    <p>大家好，我是渣渣辉</p>
-    <p>大家好，我是{{msg}}</p>
-    <p v-text="msg" title="哈哈哈"></p>
-    <p v-html="tag" title="哈哈哈"></p>
-    <button v-on:click="show">点我触发事件</button>
+    <p>大家好我是{{msg}}</p>
+    <p>{{msg}}</p>
+    <p>{{car.brand}}</p>
+    <p v-text="car.color"></p>
   </div>
   <script src='./src/compile.js'></script>
   <script src="./src/vue.js"></script>
@@ -23,7 +22,11 @@
       el: '#app',
       data: {
         msg: 'hello Vue',
-        tag: '<h2>哈哈哈</h2>'
+        tag: '<h2>哈哈哈</h2>',
+        car: {
+          brand: '车牌',
+          color: 'black',
+        }
       },
       methods: {
         show() {
