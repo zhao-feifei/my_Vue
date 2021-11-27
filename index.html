@@ -10,8 +10,8 @@
 
 <body>
   <div id="app">
-    <p>{{msg}}</p>
-    <p v-text="msg"></p>
+    <p v-text="msg" title="哈哈哈"></p>
+    <p v-html="tag" title="哈哈哈"></p>
   </div>
   <script src='./src/compile.js'></script>
   <script src="./src/vue.js"></script>
@@ -19,7 +19,8 @@
     const vm = new Vue({
       el: '#app',
       data: {
-        msg: 'hello Vue'
+        msg: 'hello Vue',
+        tag: '<h2>哈哈哈</h2>'
       }
     });
   </script>

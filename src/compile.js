@@ -12,6 +12,7 @@ class Compile {
       //2.在内存中编译fragment
       this.compile(fragment)
       //3.把fragment一次性添加到页面
+      this.el.appendChild(fragment)
     }
   }
 
@@ -42,7 +43,6 @@ class Compile {
         //如果是文本节点，解析插值表达式
         this.compileText(node)
       }
-
       //如果当前节点存在子节点，需要递归解析
       if (node.childNodes && node.childNodes.length > 0) {
         this.compile(node)
@@ -51,11 +51,28 @@ class Compile {
   }
   //解析元素标签
   compileElement(node) {
-    console.log('1111')
+    // console.log(node)
+    //1.获取所有属性
+    let attributes = node.attributes
+    this.toArray(attributes).forEach((attr) => {
+      //2.解析  v-  开头的指令
+      let attrName = attr.name
+      if (this.isDirective(attrName)) {
+        //获取指令后半部分
+        let type = attrName.slice(2)
+        let expr = attr.value
+        if (type === 'text') {
+          node.textContent = this.vm.$data[expr]
+        }
+        if (type === 'html') {
+          node.innerHTML = this.vm.$data[expr]
+        }
+      }
+    })
   }
   //解析文本节点
   compileText(node) {
-    console.log('222')
+    // console.log(node)
   }
 
   /*---------------------------------工具方法-------------------------------*/
@@ -70,5 +87,9 @@ class Compile {
   //是否为文本节点
   isTextNode(node) {
     return node.nodeType === 3
+  }
+  //是否为指令
+  isDirective(attrName) {
+    return attrName.startsWith('v-')
   }
 }
