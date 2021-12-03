@@ -22,11 +22,15 @@ class Observer {
   //定义响应式的数据，进行数据劫持
   defineReactive(data, key, value) {
     let that = this
+    //dep 保存了所有订阅了该数据的订阅者
+    let dep = new Dep()
     Object.defineProperty(data, key, {
       enumerable: true,
       configurable: true,
       get() {
-        console.log('您获取了值', value)
+        //如果Dep.target中有watcher对象，存储到订阅者数组中
+        Dep.target && dep.addSub(Dep.target)
+        console.log(dep)
         return value
       },
       set(newValue) {
@@ -35,7 +39,9 @@ class Observer {
         }
         that.walk(newValue)
         value = newValue
-        console.log('您设置了值', newValue)
+
+        //发布通知  让所有订阅者更新内容
+        dep.notify()
       },
     })
   }
